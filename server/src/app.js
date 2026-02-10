@@ -4,8 +4,9 @@ const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
-const { NODE_ENV } = require('../config/env');
+const { NODE_ENV, PORT } = require('../config/env');
 const { SERVICE_NAME } = require('../config/constants');
+const authRoutes = require('../routes/auth.routes');
 
 const app = express();
 
@@ -26,10 +27,19 @@ const swaggerSpec = swaggerJSDoc({
     },
     servers: [
       {
-        url: 'http://localhost:4000',
+        url: `http://localhost:${PORT}`,
         description: 'Local development',
       },
     ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
     tags: [
       { name: 'Health' },
       { name: 'Auth' },
@@ -39,7 +49,7 @@ const swaggerSpec = swaggerJSDoc({
       { name: 'Admin' },
     ],
   },
-  apis: ['src/**/*.js'],
+  apis: ['src/**/*.js', 'routes/**/*.js'],
 });
 
 /**
@@ -65,6 +75,7 @@ app.get('/openapi.json', (req, res) => {
 });
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/auth', authRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not Found' });
