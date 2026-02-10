@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - WebHarbour</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-anchor text-blue-400 text-2xl"></i>
+                    <a href="../index.html" class="text-2xl font-bold">WebHarbour</a>
+                    <span class="bg-red-500 text-white px-2 py-1 rounded text-xs font-bold ml-2">ADMIN</span>
+                </div>
+
+                <div class="flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-300 hover:text-white">
+                        <i class="fas fa-home mr-1"></i> Site
+                    </a>
+                    <div id="admin-auth-buttons">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Container -->
+    <div class="container mx-auto px-4 py-8">
+        <div id="admin-container">
+            <!-- Admin content will be loaded here after auth check -->
+            <div class="text-center py-12">
+                <div class="spinner"></div>
+                <p class="mt-4 text-gray-600">Loading admin panel...</p>
+            </div>
+        </div>
+
+        <!-- Admin Content (Initially hidden) -->
+        <div id="admin-content" class="hidden">
+            <!-- Admin Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Admin Panel</h1>
+                <p class="text-gray-600">Manage your WebHarbour marketplace</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-users text-blue-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Total Users</p>
+                            <p class="text-2xl font-bold" id="stat-total-users">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-box text-green-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Total Products</p>
+                            <p class="text-2xl font-bold" id="stat-total-products">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-clock text-yellow-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Pending Reviews</p>
+                            <p class="text-2xl font-bold" id="stat-pending-products">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-dollar-sign text-purple-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Total Revenue</p>
+                            <p class="text-2xl font-bold" id="stat-total-revenue">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Navigation -->
+            <div class="bg-white rounded-xl shadow-lg mb-8">
+                <div class="flex overflow-x-auto border-b">
+                    <button data-target="dashboard"
+                        class="admin-nav-link active px-6 py-4 font-medium border-b-2 border-blue-600 text-blue-600">
+                        <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                    </button>
+                    <button data-target="pending"
+                        class="admin-nav-link px-6 py-4 font-medium text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-clock mr-2"></i> Pending Reviews
+                    </button>
+                    <button data-target="products"
+                        class="admin-nav-link px-6 py-4 font-medium text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-box mr-2"></i> All Products
+                    </button>
+                    <button data-target="users"
+                        class="admin-nav-link px-6 py-4 font-medium text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-users mr-2"></i> Users
+                    </button>
+                    <button data-target="orders"
+                        class="admin-nav-link px-6 py-4 font-medium text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-shopping-bag mr-2"></i> Orders
+                    </button>
+                    <button data-target="settings"
+                        class="admin-nav-link px-6 py-4 font-medium text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-cog mr-2"></i> Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Sections -->
+            <div class="admin-section" id="dashboard-section">
+                <!-- Dashboard content loaded by JavaScript -->
+                <div class="text-center py-12">
+                    <div class="spinner"></div>
+                    <p class="mt-4 text-gray-600">Loading dashboard data...</p>
+                </div>
+            </div>
+
+            <div class="admin-section hidden" id="pending-section">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6">Pending Product Reviews</h2>
+                    <div id="pending-products-container">
+                        <!-- Pending products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section hidden" id="products-section">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6">All Products</h2>
+                    <div id="all-products-container">
+                        <!-- All products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section hidden" id="users-section">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6">User Management</h2>
+                    <div id="all-users-container">
+                        <!-- Users will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section hidden" id="orders-section">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6">Order Management</h2>
+                    <div id="all-orders-container">
+                        <!-- Orders will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section hidden" id="settings-section">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6">System Settings</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Platform Settings</h3>
+                            <form id="platform-settings" onsubmit="savePlatformSettings(event)">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="form-label">Platform Name</label>
+                                        <input type="text" class="form-input" value="WebHarbour">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Commission Rate (%)</label>
+                                        <input type="number" class="form-input" value="30" min="0" max="100">
+                                        <p class="text-sm text-gray-600 mt-1">Percentage taken from each sale</p>
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Minimum Product Price ($)</label>
+                                        <input type="number" class="form-input" value="0.99" min="0" step="0.01">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Maximum Product Price ($)</label>
+                                        <input type="number" class="form-input" value="999.99" min="0" step="0.01">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Review Timeframe (days)</label>
+                                        <input type="number" class="form-input" value="2" min="1">
+                                        <p class="text-sm text-gray-600 mt-1">Maximum days for product review</p>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-6">Save Settings</button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Email Settings</h3>
+                            <form id="email-settings" onsubmit="saveEmailSettings(event)">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="form-label">SMTP Host</label>
+                                        <input type="text" class="form-input" placeholder="smtp.gmail.com">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">SMTP Port</label>
+                                        <input type="number" class="form-input" placeholder="587">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">SMTP Username</label>
+                                        <input type="text" class="form-input" placeholder="your-email@gmail.com">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">SMTP Password</label>
+                                        <input type="password" class="form-input" placeholder="••••••••">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">From Email</label>
+                                        <input type="email" class="form-input" placeholder="noreply@webharbour.com">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-6">Save Email Settings</button>
+                            </form>
+
+                            <div class="mt-8 pt-8 border-t">
+                                <h4 class="font-bold mb-4">System Actions</h4>
+                                <div class="space-y-3">
+                                    <button onclick="clearCache()" class="btn btn-outline w-full text-left">
+                                        <i class="fas fa-broom mr-2"></i> Clear System Cache
+                                    </button>
+                                    <button onclick="runBackup()" class="btn btn-outline w-full text-left">
+                                        <i class="fas fa-database mr-2"></i> Run Database Backup
+                                    </button>
+                                    <button onclick="showSystemLogs()" class="btn btn-outline w-full text-left">
+                                        <i class="fas fa-terminal mr-2"></i> View System Logs
+                                    </button>
+                                    <button onclick="showMaintenanceModal()" class="btn btn-warning w-full text-left">
+                                        <i class="fas fa-tools mr-2"></i> Maintenance Mode
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="reject-modal" class="modal hidden">
+        <div class="modal-content max-w-md">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">Reject Product</h3>
+                <p class="text-gray-600 mb-4">Please provide a reason for rejection (minimum 10 characters):</p>
+
+                <textarea id="rejection-reason" class="form-input mb-4" rows="4"
+                    placeholder="Example: The file contains malware, low quality content, violates terms, etc."></textarea>
+
+                <div class="flex space-x-3">
+                    <button onclick="closeModal()" class="btn btn-secondary flex-1">Cancel</button>
+                    <button onclick="submitRejection()" class="btn btn-danger flex-1" id="reject-submit-btn">
+                        Reject Product
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Maintenance Modal -->
+    <div id="maintenance-modal" class="modal hidden">
+        <div class="modal-content max-w-md">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">Maintenance Mode</h3>
+
+                <div class="mb-6">
+                    <label class="flex items-center mb-4">
+                        <input type="checkbox" id="maintenance-toggle" class="mr-3">
+                        <span>Enable Maintenance Mode</span>
+                    </label>
+
+                    <div id="maintenance-options" class="hidden">
+                        <div class="mb-4">
+                            <label class="form-label">Maintenance Message</label>
+                            <textarea id="maintenance-message" class="form-input" rows="3"
+                                placeholder="We're performing scheduled maintenance. We'll be back shortly!"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Estimated Time</label>
+                            <input type="text" id="maintenance-time" class="form-input" placeholder="e.g., 2 hours">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button onclick="closeModal()" class="btn btn-secondary flex-1">Cancel</button>
+                    <button onclick="saveMaintenanceSettings()" class="btn btn-primary flex-1">
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin.js"></script>
+
+    <style>
+        .admin-nav-link {
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav-link:hover {
+            background-color: #f9fafb;
+        }
+
+        .admin-nav-link.active {
+            background-color: #f0f9ff;
+        }
+
+        .product-review-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .product-review-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-review-card.pending {
+            border-left-color: #f59e0b;
+        }
+
+        .product-review-card.approved {
+            border-left-color: #10b981;
+        }
+
+        .product-review-card.rejected {
+            border-left-color: #ef4444;
+        }
+    </style>
+
+    <script>
+        // Admin page specific JavaScript
+        let currentRejectProductId = null;
+
+        // Check admin access
+        async function checkAdminAccess() {
+            const user = Auth.getUser();
+            if (!user || user.role !== 'admin') {
+                document.getElementById('admin-container').innerHTML = `
+                    <div class="max-w-md mx-auto text-center py-12">
+                        <i class="fas fa-lock text-red-500 text-5xl mb-6"></i>
+                        <h2 class="text-2xl font-bold mb-4">Access Denied</h2>
+                        <p class="text-gray-600 mb-8">You don't have permission to access the admin panel.</p>
+                        <a href="../index.html" class="btn btn-primary px-8">Return to Home</a>
+                    </div>
+                `;
+                return false;
+            }
+
+            // Update auth buttons
+            document.getElementById('admin-auth-buttons').innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-300">Welcome, <span class="font-semibold">${user.username}</span></span>
+                    <button onclick="Auth.logout()" 
+                            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    </button>
+                </div>
+            `;
+
+            return true;
+        }
+
+        // Load admin data
+        async function loadAdminData() {
+            const hasAccess = await checkAdminAccess();
+            if (!hasAccess) return;
+
+            // Show admin content
+            document.getElementById('admin-content').classList.remove('hidden');
+            document.getElementById('admin-container').classList.add('hidden');
+
+            // Load dashboard data
+            await loadDashboardData();
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/dashboard/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update stats
+                    document.getElementById('stat-total-users').textContent = data.stats.totalUsers;
+                    document.getElementById('stat-total-products').textContent = data.stats.totalProducts;
+                    document.getElementById('stat-pending-products').textContent = data.stats.pendingProducts;
+                    document.getElementById('stat-total-revenue').textContent = `$${data.stats.totalRevenue.toFixed(2)}`;
+
+                    // Update dashboard section
+                    const dashboardSection = document.getElementById('dashboard-section');
+                    dashboardSection.innerHTML = `
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Recent Activities -->
+                            <div class="lg:col-span-2">
+                                <div class="bg-white rounded-xl shadow-lg p-6">
+                                    <h3 class="text-xl font-bold mb-6">Recent Activities</h3>
+                                    <div id="recent-activities" class="space-y-4">
+                                        ${data.recent.products && data.recent.products.length > 0 ?
+                            data.recent.products.map(product => `
+                                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+                                                    <div class="flex-shrink-0">
+                                                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                                            <i class="fas fa-upload"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <p class="text-sm font-medium text-gray-900">
+                                                            New product: ${product.title}
+                                                        </p>
+                                                        <p class="text-xs text-gray-500">
+                                                            By ${product.developer?.username || 'Unknown'} • 
+                                                            ${new Date(product.createdAt).toLocaleDateString()}
+                                                        </p>
+                                                    </div>
+                                                    <div class="ml-auto">
+                                                        <span class="badge badge-${product.status}">${product.status}</span>
+                                                    </div>
+                                                </div>
+                                            `).join('') :
+                            `<p class="text-gray-600 text-center py-4">No recent activities</p>`
+                        }
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Actions -->
+                            <div>
+                                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                                    <h3 class="text-xl font-bold mb-6">Quick Actions</h3>
+                                    <div class="space-y-3">
+                                        <button onclick="loadPendingProducts()" 
+                                                class="btn btn-outline w-full text-left">
+                                            <i class="fas fa-clock mr-2"></i> Review Pending Products
+                                            ${data.stats.pendingProducts > 0 ?
+                            `<span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">${data.stats.pendingProducts}</span>` :
+                            ''}
+                                        </button>
+                                        <button onclick="loadAllUsers()" 
+                                                class="btn btn-outline w-full text-left">
+                                            <i class="fas fa-users mr-2"></i> Manage Users
+                                        </button>
+                                        <button onclick="loadAllOrders()" 
+                                                class="btn btn-outline w-full text-left">
+                                            <i class="fas fa-shopping-bag mr-2"></i> View Orders
+                                        </button>
+                                        <button onclick="showSystemLogs()" 
+                                                class="btn btn-outline w-full text-left">
+                                            <i class="fas fa-terminal mr-2"></i> System Logs
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- System Status -->
+                                <div class="bg-white rounded-xl shadow-lg p-6">
+                                    <h3 class="text-xl font-bold mb-6">System Status</h3>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <span class="text-sm font-medium">Storage</span>
+                                                <span class="text-sm text-gray-600">65% used</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-500 h-2 rounded-full" style="width: 65%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <span class="text-sm font-medium">Server Load</span>
+                                                <span class="text-sm text-gray-600">42%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-blue-500 h-2 rounded-full" style="width: 42%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <span class="text-sm font-medium">Memory</span>
+                                                <span class="text-sm text-gray-600">78% used</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 78%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                document.getElementById('dashboard-section').innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
+                        <p class="text-gray-600">Failed to load dashboard data</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load pending products
+        async function loadPendingProducts() {
+            // Switch to pending tab
+            switchAdminTab('pending');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/pending-products`, {
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const container = document.getElementById('pending-products-container');
+
+                    if (data.products.length === 0) {
+                        container.innerHTML = `
+                            <div class="text-center py-12">
+                                <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
+                                <p class="text-gray-600">No pending products to review</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = data.products.map(product => `
+                        <div class="product-review-card pending bg-white border rounded-xl p-6 mb-4">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-start space-x-4">
+                                    <img src="${product.thumbnail}" 
+                                         alt="${product.title}"
+                                         class="w-20 h-20 object-cover rounded-lg">
+                                    <div>
+                                        <h3 class="font-bold text-lg">${product.title}</h3>
+                                        <p class="text-gray-600 text-sm mb-2">
+                                            <i class="fas fa-user mr-1"></i> ${product.developer?.username || 'Unknown'}
+                                            <span class="mx-2">•</span>
+                                            <i class="fas fa-calendar mr-1"></i> ${new Date(product.createdAt).toLocaleDateString()}
+                                        </p>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="badge badge-${product.category}">${product.category}</span>
+                                            <span class="text-gray-700 font-medium">$${product.price.toFixed(2)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="badge badge-pending">Pending</span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-gray-700 mb-4 line-clamp-2">${product.description.substring(0, 200)}...</p>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="space-x-2">
+                                    <button onclick="viewProductDetails('${product._id}')" 
+                                            class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                        <i class="fas fa-eye mr-1"></i> View Details
+                                    </button>
+                                    <a href="${product.fileUrl}" target="_blank" 
+                                       class="px-4 py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                                        <i class="fas fa-download mr-1"></i> Download File
+                                    </a>
+                                </div>
+                                
+                                <div class="space-x-2">
+                                    <button onclick="approveProduct('${product._id}')" 
+                                            class="px-4 py-2 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200">
+                                        <i class="fas fa-check mr-1"></i> Approve
+                                    </button>
+                                    <button onclick="showRejectModal('${product._id}')" 
+                                            class="px-4 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
+                                        <i class="fas fa-times mr-1"></i> Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading pending products:', error);
+                document.getElementById('pending-products-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
+                        <p class="text-gray-600">Failed to load pending products</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Switch admin tab
+        function switchAdminTab(tabName) {
+            // Update nav links
+            document.querySelectorAll('.admin-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(`${tabName}-section`).classList.remove('hidden');
+        }
+
+        // Approve product
+        async function approveProduct(productId) {
+            if (!confirm('Are you sure you want to approve this product?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products/${productId}/approve`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Utils.showAlert('Product approved successfully!', 'success');
+
+                    // Remove from pending list
+                    const productElement = document.querySelector(`[data-product-id="${productId}"]`);
+                    if (productElement) {
+                        productElement.remove();
+                    }
+
+                    // Reload pending products
+                    loadPendingProducts();
+
+                    // Update dashboard stats
+                    loadDashboardData();
+                } else {
+                    throw new Error(data.message || 'Approval failed');
+                }
+            } catch (error) {
+                Utils.showAlert(error.message, 'error');
+            }
+        }
+
+        // Show reject modal
+        function showRejectModal(productId) {
+            currentRejectProductId = productId;
+            document.getElementById('rejection-reason').value = '';
+            document.getElementById('reject-modal').classList.remove('hidden');
+        }
+
+        // Submit rejection
+        async function submitRejection() {
+            const reason = document.getElementById('rejection-reason').value.trim();
+
+            if (!reason || reason.length < 10) {
+                Utils.showAlert('Please provide a reason with at least 10 characters', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('reject-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="spinner spinner-sm mr-2"></div> Processing...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products/${currentRejectProductId}/reject`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    },
+                    body: JSON.stringify({ reason })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Utils.showAlert('Product rejected', 'success');
+                    closeModal();
+
+                    // Remove from pending list
+                    const productElement = document.querySelector(`[data-product-id="${currentRejectProductId}"]`);
+                    if (productElement) {
+                        productElement.remove();
+                    }
+
+                    // Reload pending products
+                    loadPendingProducts();
+
+                    // Update dashboard stats
+                    loadDashboardData();
+                } else {
+                    throw new Error(data.message || 'Rejection failed');
+                }
+            } catch (error) {
+                Utils.showAlert(error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Reject Product';
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('reject-modal').classList.add('hidden');
+            document.getElementById('maintenance-modal').classList.add('hidden');
+        }
+
+        // View product details
+        function viewProductDetails(productId) {
+            window.open(`product.html?id=${productId}`, '_blank');
+        }
+
+        // Load all products
+        async function loadAllProducts() {
+            switchAdminTab('products');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/products?limit=50`, {
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const container = document.getElementById('all-products-container');
+
+                    container.innerHTML = `
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Developer</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Downloads</th>
+                                        <th>Rating</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.products.map(product => `
+                                        <tr data-product-id="${product._id}">
+                                            <td>
+                                                <div class="flex items-center">
+                                                    <img src="${product.thumbnail}" 
+                                                         class="w-10 h-10 rounded mr-3">
+                                                    <div>
+                                                        <p class="font-medium">${product.title}</p>
+                                                        <p class="text-xs text-gray-600">${product.version}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>${product.developer?.username || 'Unknown'}</td>
+                                            <td><span class="badge badge-${product.category}">${product.category}</span></td>
+                                            <td>$${product.price.toFixed(2)}</td>
+                                            <td><span class="badge badge-${product.status}">${product.status}</span></td>
+                                            <td>${product.downloads || 0}</td>
+                                            <td>
+                                                <div class="flex items-center">
+                                                    <div class="star-rating text-sm mr-2">
+                                                        ${ProductAPI.renderStars(product.ratings?.average || 0)}
+                                                    </div>
+                                                    <span>${product.ratings?.average?.toFixed(1) || '0.0'}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex space-x-2">
+                                                    <button onclick="viewProductDetails('${product._id}')" 
+                                                            class="text-blue-600 hover:text-blue-800">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button onclick="toggleFeature('${product._id}', ${!product.featured})" 
+                                                            class="${product.featured ? 'text-yellow-600' : 'text-gray-600'} hover:text-yellow-800">
+                                                        <i class="fas fa-star"></i>
+                                                    </button>
+                                                    <button onclick="deleteProduct('${product._id}')" 
+                                                            class="text-red-600 hover:text-red-800">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-gray-600">Showing ${data.products.length} of ${data.pagination.total} products</p>
+                            <div class="space-x-2">
+                                <button class="btn btn-outline">Previous</button>
+                                <button class="btn btn-outline">Next</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('all-products-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
+                        <p class="text-gray-600">Failed to load products</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load all users
+        async function loadAllUsers() {
+            switchAdminTab('users');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const container = document.getElementById('all-users-container');
+
+                    container.innerHTML = `
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Joined</th>
+                                        <th>Products</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.users.map(user => `
+                                        <tr>
+                                            <td>
+                                                <div class="flex items-center">
+                                                    <img src="${user.avatar}" 
+                                                         class="w-8 h-8 rounded-full mr-3">
+                                                    <div>
+                                                        <p class="font-medium">${user.username}</p>
+                                                        <p class="text-xs text-gray-600">ID: ${user._id.substring(0, 8)}...</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>${user.email}</td>
+                                            <td>
+                                                <select onchange="updateUserRole('${user._id}', this.value)" 
+                                                        class="form-input text-sm py-1">
+                                                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+                                                    <option value="developer" ${user.role === 'developer' ? 'selected' : ''}>Developer</option>
+                                                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                                                </select>
+                                            </td>
+                                            <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                                            <td>${user.uploadedProducts?.length || 0}</td>
+                                            <td>
+                                                <span class="badge ${user.isVerified ? 'badge-approved' : 'badge-pending'}">
+                                                    ${user.isVerified ? 'Verified' : 'Pending'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button onclick="viewUserDetails('${user._id}')" 
+                                                        class="text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-gray-600">Showing ${data.users.length} of ${data.pagination.total} users</p>
+                            <div class="space-x-2">
+                                <button class="btn btn-outline">Previous</button>
+                                <button class="btn btn-outline">Next</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('all-users-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
+                        <p class="text-gray-600">Failed to load users</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load all orders
+        async function loadAllOrders() {
+            switchAdminTab('orders');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/orders`, {
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const container = document.getElementById('all-orders-container');
+
+                    container.innerHTML = `
+                        <div class="mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <p class="text-sm text-gray-600">Total Revenue</p>
+                                    <p class="text-2xl font-bold">$${data.stats.totalRevenue.toFixed(2)}</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <p class="text-sm text-gray-600">Daily Revenue</p>
+                                    <p class="text-2xl font-bold">$${data.stats.dailyRevenue.toFixed(2)}</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <p class="text-sm text-gray-600">Total Orders</p>
+                                    <p class="text-2xl font-bold">${data.stats.totalOrders}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>User</th>
+                                        <th>Product</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.orders.map(order => `
+                                        <tr>
+                                            <td class="font-mono">${order.orderId}</td>
+                                            <td>${order.user?.username || 'Deleted User'}</td>
+                                            <td>${order.product?.title || 'Deleted Product'}</td>
+                                            <td>$${order.amount.toFixed(2)}</td>
+                                            <td><span class="badge ${order.paymentStatus === 'completed' ? 'badge-approved' : 'badge-pending'}">${order.paymentStatus}</span></td>
+                                            <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                                            <td>
+                                                <button onclick="viewOrderDetails('${order._id}')" 
+                                                        class="text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-gray-600">Showing ${data.orders.length} of ${data.pagination.total} orders</p>
+                            <div class="space-x-2">
+                                <button class="btn btn-outline">Previous</button>
+                                <button class="btn btn-outline">Next</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('all-orders-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
+                        <p class="text-gray-600">Failed to load orders</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update user role
+        async function updateUserRole(userId, role) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/users/${userId}/role`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    },
+                    body: JSON.stringify({ role })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Utils.showAlert(`User role updated to ${role}`, 'success');
+                } else {
+                    throw new Error(data.message || 'Failed to update role');
+                }
+            } catch (error) {
+                Utils.showAlert(error.message, 'error');
+            }
+        }
+
+        // View user details
+        function viewUserDetails(userId) {
+            // TODO: Implement user details modal
+            alert(`View user details for ID: ${userId}`);
+        }
+
+        // View order details
+        function viewOrderDetails(orderId) {
+            // TODO: Implement order details modal
+            alert(`View order details for ID: ${orderId}`);
+        }
+
+        // Toggle product feature
+        async function toggleFeature(productId, feature) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/products/${productId}/feature`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    },
+                    body: JSON.stringify({ featured: feature })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Utils.showAlert(`Product ${feature ? 'featured' : 'unfeatured'}`, 'success');
+                    loadAllProducts();
+                } else {
+                    throw new Error(data.message || 'Failed to update feature status');
+                }
+            } catch (error) {
+                Utils.showAlert(error.message, 'error');
+            }
+        }
+
+        // Delete product
+        async function deleteProduct(productId) {
+            if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/upload/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Utils.showAlert('Product deleted successfully', 'success');
+
+                    // Remove from table
+                    const row = document.querySelector(`[data-product-id="${productId}"]`);
+                    if (row) {
+                        row.remove();
+                    }
+                } else {
+                    throw new Error(data.message || 'Failed to delete product');
+                }
+            } catch (error) {
+                Utils.showAlert(error.message, 'error');
+            }
+        }
+
+        // Save platform settings
+        function savePlatformSettings(event) {
+            event.preventDefault();
+            Utils.showAlert('Platform settings saved successfully!', 'success');
+        }
+
+        // Save email settings
+        function saveEmailSettings(event) {
+            event.preventDefault();
+            Utils.showAlert('Email settings saved successfully!', 'success');
+        }
+
+        // Clear cache
+        function clearCache() {
+            if (confirm('Are you sure you want to clear the system cache?')) {
+                Utils.showAlert('System cache cleared successfully!', 'success');
+            }
+        }
+
+        // Run backup
+        function runBackup() {
+            Utils.showAlert('Database backup started. You will be notified when complete.', 'info');
+        }
+
+        // Show system logs
+        function showSystemLogs() {
+            alert('System logs would open here in a real application.');
+        }
+
+        // Show maintenance modal
+        function showMaintenanceModal() {
+            document.getElementById('maintenance-modal').classList.remove('hidden');
+
+            // Toggle maintenance options
+            const toggle = document.getElementById('maintenance-toggle');
+            const options = document.getElementById('maintenance-options');
+
+            toggle.addEventListener('change', function () {
+                if (this.checked) {
+                    options.classList.remove('hidden');
+                } else {
+                    options.classList.add('hidden');
+                }
+            });
+        }
+
+        // Save maintenance settings
+        function saveMaintenanceSettings() {
+            const enabled = document.getElementById('maintenance-toggle').checked;
+            const message = document.getElementById('maintenance-message').value;
+            const time = document.getElementById('maintenance-time').value;
+
+            Utils.showAlert(`Maintenance mode ${enabled ? 'enabled' : 'disabled'}`, 'success');
+            closeModal();
+        }
+
+        // Initialize admin page
+        document.addEventListener('DOMContentLoaded', function () {
+            // Setup navigation
+            document.querySelectorAll('.admin-nav-link').forEach(link => {
+                link.addEventListener('click', function () {
+                    const target = this.getAttribute('data-target');
+                    switchAdminTab(target);
+                });
+            });
+
+            // Load admin data
+            loadAdminData();
+        });
+
+        // Expose functions to window
+        window.loadPendingProducts = loadPendingProducts;
+        window.loadAllProducts = loadAllProducts;
+        window.loadAllUsers = loadAllUsers;
+        window.loadAllOrders = loadAllOrders;
+        window.switchAdminTab = switchAdminTab;
+        window.approveProduct = approveProduct;
+        window.showRejectModal = showRejectModal;
+        window.submitRejection = submitRejection;
+        window.closeModal = closeModal;
+        window.viewProductDetails = viewProductDetails;
+        window.updateUserRole = updateUserRole;
+        window.viewUserDetails = viewUserDetails;
+        window.viewOrderDetails = viewOrderDetails;
+        window.toggleFeature = toggleFeature;
+        window.deleteProduct = deleteProduct;
+        window.savePlatformSettings = savePlatformSettings;
+        window.saveEmailSettings = saveEmailSettings;
+        window.clearCache = clearCache;
+        window.runBackup = runBackup;
+        window.showSystemLogs = showSystemLogs;
+        window.showMaintenanceModal = showMaintenanceModal;
+        window.saveMaintenanceSettings = saveMaintenanceSettings;
+    </script>
+</body>
+
+</html>

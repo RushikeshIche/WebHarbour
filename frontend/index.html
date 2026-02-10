@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebHarbour - Digital Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-anchor text-blue-600 text-2xl"></i>
+                    <a href="index.html" class="text-2xl font-bold text-gray-800">WebHarbour</a>
+                </div>
+
+                <div class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+                    <a href="pages/marketplace.html" class="text-gray-600 hover:text-blue-600">Marketplace</a>
+                    <a href="pages/upload.html" class="text-gray-600 hover:text-blue-600">Upload</a>
+                    <a href="#categories" class="text-gray-600 hover:text-blue-600">Categories</a>
+                    <a href="#developers" class="text-gray-600 hover:text-blue-600">Developers</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search apps, games, software..."
+                            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="absolute right-3 top-2 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div id="auth-buttons">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold mb-6">Discover Amazing Digital Products</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">
+                WebHarbour is your gateway to premium apps, games, software, PDFs, and movies.
+                All products go through manual review to ensure quality.
+            </p>
+            <div class="space-x-4">
+                <a href="pages/marketplace.html"
+                    class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    Explore Marketplace
+                </a>
+                <a href="pages/upload.html"
+                    class="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+                    Upload Your Product
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-4xl font-bold text-blue-600 mb-2" id="total-products">0</div>
+                    <div class="text-gray-600">Products Available</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-green-600 mb-2" id="total-developers">0</div>
+                    <div class="text-gray-600">Trusted Developers</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-purple-600 mb-2" id="total-downloads">0</div>
+                    <div class="text-gray-600">Total Downloads</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-yellow-600 mb-2" id="satisfaction-rate">100%</div>
+                    <div class="text-gray-600">Customer Satisfaction</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Featured Products</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="featured-products">
+                <!-- Featured products will be loaded here -->
+                <div class="text-center py-12">
+                    <div class="spinner"></div>
+                    <p class="mt-4 text-gray-600">Loading featured products...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Browse Categories</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                <a href="pages/marketplace.html?category=app" class="category-card">
+                    <div class="bg-blue-100 p-8 rounded-xl text-center hover:bg-blue-200 transition">
+                        <i class="fas fa-mobile-alt text-blue-600 text-4xl mb-4"></i>
+                        <h3 class="font-semibold text-lg">Mobile Apps</h3>
+                    </div>
+                </a>
+                <a href="pages/marketplace.html?category=game" class="category-card">
+                    <div class="bg-green-100 p-8 rounded-xl text-center hover:bg-green-200 transition">
+                        <i class="fas fa-gamepad text-green-600 text-4xl mb-4"></i>
+                        <h3 class="font-semibold text-lg">Games</h3>
+                    </div>
+                </a>
+                <a href="pages/marketplace.html?category=software" class="category-card">
+                    <div class="bg-purple-100 p-8 rounded-xl text-center hover:bg-purple-200 transition">
+                        <i class="fas fa-laptop-code text-purple-600 text-4xl mb-4"></i>
+                        <h3 class="font-semibold text-lg">Software</h3>
+                    </div>
+                </a>
+                <a href="pages/marketplace.html?category=pdf" class="category-card">
+                    <div class="bg-red-100 p-8 rounded-xl text-center hover:bg-red-200 transition">
+                        <i class="fas fa-file-pdf text-red-600 text-4xl mb-4"></i>
+                        <h3 class="font-semibold text-lg">PDFs</h3>
+                    </div>
+                </a>
+                <a href="pages/marketplace.html?category=movie" class="category-card">
+                    <div class="bg-yellow-100 p-8 rounded-xl text-center hover:bg-yellow-200 transition">
+                        <i class="fas fa-film text-yellow-600 text-4xl mb-4"></i>
+                        <h3 class="font-semibold text-lg">Movies</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center">How WebHarbour Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div
+                        class="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="fas fa-upload text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">1. Upload</h3>
+                    <p class="text-gray-600">Developers upload their digital products with details and pricing.</p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="fas fa-search text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">2. Manual Review</h3>
+                    <p class="text-gray-600">Our team manually reviews each product for quality and security.</p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="fas fa-shopping-cart text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">3. Purchase & Download</h3>
+                    <p class="text-gray-600">Users purchase reviewed products and get instant download access.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-anchor text-blue-400 text-2xl"></i>
+                        <span class="text-2xl font-bold">WebHarbour</span>
+                    </div>
+                    <p class="text-gray-400">Your trusted digital marketplace for quality apps, games, software, PDFs,
+                        and movies.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="pages/marketplace.html" class="text-gray-400 hover:text-white">Marketplace</a></li>
+                        <li><a href="pages/upload.html" class="text-gray-400 hover:text-white">Upload Product</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Developers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Refund Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400"><i class="fas fa-envelope mr-2"></i>support@webharbour.com</li>
+                        <li class="text-gray-400"><i class="fas fa-phone mr-2"></i>+1 (555) 123-4567</li>
+                        <li class="text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i>123 Digital Street, Tech
+                            City</li>
+                    </ul>
+                    <div class="mt-6 space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 WebHarbour. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

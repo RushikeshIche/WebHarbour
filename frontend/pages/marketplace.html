@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - WebHarbour</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-anchor text-blue-600 text-2xl"></i>
+                    <a href="../index.html" class="text-2xl font-bold text-gray-800">WebHarbour</a>
+                </div>
+
+                <div class="hidden md:flex space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+                    <a href="marketplace.html" class="text-blue-600 font-semibold">Marketplace</a>
+                    <a href="upload.html" class="text-gray-600 hover:text-blue-600">Upload</a>
+                    <a href="#categories" class="text-gray-600 hover:text-blue-600">Categories</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block">
+                        <input type="text" id="search-input" placeholder="Search apps, games, software..."
+                            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                        <button class="absolute right-3 top-2 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div id="auth-buttons">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Search -->
+            <div class="md:hidden mt-4">
+                <div class="relative">
+                    <input type="text" id="mobile-search-input" placeholder="Search..."
+                        class="w-full px-4 py-2 border rounded-lg">
+                    <button class="absolute right-3 top-2 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Marketplace Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-4xl font-bold mb-4">Marketplace</h1>
+            <p class="text-xl mb-6">Discover amazing digital products from trusted developers</p>
+
+            <!-- Quick Stats -->
+            <div class="flex flex-wrap gap-4 text-sm">
+                <span class="bg-white/20 px-3 py-1 rounded-full">
+                    <i class="fas fa-box mr-1"></i> <span id="total-products-count">1,234</span> Products
+                </span>
+                <span class="bg-white/20 px-3 py-1 rounded-full">
+                    <i class="fas fa-users mr-1"></i> <span id="total-developers-count">567</span> Developers
+                </span>
+                <span class="bg-white/20 px-3 py-1 rounded-full">
+                    <i class="fas fa-star mr-1"></i> 98% Satisfaction
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Filters Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+                    <h3 class="text-lg font-bold mb-4">Filters</h3>
+
+                    <!-- Category Filter -->
+                    <div class="mb-6">
+                        <label class="form-label mb-2">Category</label>
+                        <select id="category-filter" class="form-input">
+                            <option value="">All Categories</option>
+                            <option value="app">Mobile Apps</option>
+                            <option value="game">Games</option>
+                            <option value="software">Software</option>
+                            <option value="pdf">PDFs</option>
+                            <option value="movie">Movies</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="mb-6">
+                        <label class="form-label mb-2">Price Range</label>
+                        <div class="flex space-x-2 mb-2">
+                            <input type="number" id="min-price" class="form-input flex-1" placeholder="Min" min="0">
+                            <span class="self-center">to</span>
+                            <input type="number" id="max-price" class="form-input flex-1" placeholder="Max" min="0">
+                        </div>
+                    </div>
+
+                    <!-- License Type -->
+                    <div class="mb-6">
+                        <label class="form-label mb-2">License Type</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 license-filter" value="free">
+                                <span>Free</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 license-filter" value="paid" checked>
+                                <span>Paid</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 license-filter" value="freemium">
+                                <span>Freemium</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 license-filter" value="subscription">
+                                <span>Subscription</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Rating Filter -->
+                    <div class="mb-6">
+                        <label class="form-label mb-2">Minimum Rating</label>
+                        <div class="flex items-center">
+                            <div class="star-rating mr-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>& up</span>
+                        </div>
+                        <input type="range" id="rating-filter" min="0" max="5" step="0.5" value="0" class="w-full mt-2">
+                        <div class="flex justify-between text-sm text-gray-600 mt-1">
+                            <span>Any</span>
+                            <span>5 Stars</span>
+                        </div>
+                    </div>
+
+                    <!-- Sort By -->
+                    <div class="mb-6">
+                        <label class="form-label mb-2">Sort By</label>
+                        <select id="sort-filter" class="form-input">
+                            <option value="createdAt:desc">Newest</option>
+                            <option value="downloads:desc">Most Popular</option>
+                            <option value="ratings.average:desc">Highest Rated</option>
+                            <option value="price:asc">Price: Low to High</option>
+                            <option value="price:desc">Price: High to Low</option>
+                            <option value="title:asc">Name: A to Z</option>
+                        </select>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-3">
+                        <button id="apply-filters" class="btn btn-primary w-full">
+                            Apply Filters
+                        </button>
+                        <button id="clear-filters" class="btn btn-outline w-full">
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Categories Quick Links -->
+                <div class="mt-6 bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-4">Browse by Category</h3>
+                    <div class="space-y-3">
+                        <a href="?category=app" class="flex items-center p-3 rounded-lg hover:bg-blue-50">
+                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-mobile-alt text-blue-600"></i>
+                            </div>
+                            <span>Mobile Apps</span>
+                        </a>
+                        <a href="?category=game" class="flex items-center p-3 rounded-lg hover:bg-green-50">
+                            <div class="bg-green-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-gamepad text-green-600"></i>
+                            </div>
+                            <span>Games</span>
+                        </a>
+                        <a href="?category=software" class="flex items-center p-3 rounded-lg hover:bg-purple-50">
+                            <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-laptop-code text-purple-600"></i>
+                            </div>
+                            <span>Software</span>
+                        </a>
+                        <a href="?category=pdf" class="flex items-center p-3 rounded-lg hover:bg-red-50">
+                            <div class="bg-red-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-pdf text-red-600"></i>
+                            </div>
+                            <span>PDFs</span>
+                        </a>
+                        <a href="?category=movie" class="flex items-center p-3 rounded-lg hover:bg-yellow-50">
+                            <div class="bg-yellow-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-film text-yellow-600"></i>
+                            </div>
+                            <span>Movies</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="lg:col-span-3">
+                <!-- Top Bar -->
+                <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-4 md:mb-0">
+                            <h2 class="text-xl font-bold" id="results-title">All Products</h2>
+                            <p class="text-gray-600 text-sm" id="results-count">Showing 0 products</p>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="hidden md:flex items-center">
+                                <span class="mr-2">View:</span>
+                                <button id="grid-view" class="p-2 rounded-lg bg-blue-100 text-blue-600">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <button id="list-view" class="p-2 rounded-lg hover:bg-gray-100 ml-2">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+
+                            <div class="relative">
+                                <select id="results-per-page" class="form-input pr-8">
+                                    <option value="12">12 per page</option>
+                                    <option value="24">24 per page</option>
+                                    <option value="48">48 per page</option>
+                                    <option value="96">96 per page</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="products-loading" class="text-center py-12">
+                    <div class="spinner"></div>
+                    <p class="mt-4 text-gray-600">Loading products...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="products-empty" class="hidden text-center py-12">
+                    <i class="fas fa-search text-gray-400 text-5xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">No products found</h3>
+                    <p class="text-gray-600 mb-6">Try adjusting your filters or search term</p>
+                    <button id="reset-search" class="btn btn-primary">
+                        Reset Filters
+                    </button>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Products will be loaded here -->
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="mt-8 hidden">
+                    <div class="flex justify-center">
+                        <nav class="pagination">
+                            <!-- Pagination will be generated here -->
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Featured Developers -->
+                <div class="mt-12">
+                    <h3 class="text-2xl font-bold mb-6">Featured Developers</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex items-center mb-4">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg"
+                                    class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <h4 class="font-bold">TechWizard</h4>
+                                    <p class="text-sm text-gray-600">Mobile App Developer</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">Creator of award-winning productivity apps.</p>
+                            <a href="#" class="text-blue-600 hover:underline text-sm">
+                                View 12 products →
+                            </a>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex items-center mb-4">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg"
+                                    class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <h4 class="font-bold">GameCraft</h4>
+                                    <p class="text-sm text-gray-600">Game Studio</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">Indie game developers creating immersive experiences.</p>
+                            <a href="#" class="text-blue-600 hover:underline text-sm">
+                                View 8 products →
+                            </a>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex items-center mb-4">
+                                <img src="https://randomuser.me/api/portraits/men/67.jpg"
+                                    class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <h4 class="font-bold">CodeMasters</h4>
+                                    <p class="text-sm text-gray-600">Software Solutions</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">Enterprise software and tools for businesses.</p>
+                            <a href="#" class="text-blue-600 hover:underline text-sm">
+                                View 15 products →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-anchor text-blue-400 text-2xl"></i>
+                        <span class="text-2xl font-bold">WebHarbour</span>
+                    </div>
+                    <p class="text-gray-400">Your trusted digital marketplace.</p>
+                </div>
+                <!-- Footer links -->
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 WebHarbour. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/marketplace.js"></script>
+</body>
+
+</html>

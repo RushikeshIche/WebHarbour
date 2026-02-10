@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - WebHarbour</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-anchor text-blue-600 text-2xl"></i>
+                    <a href="../index.html" class="text-2xl font-bold text-gray-800">WebHarbour</a>
+                </div>
+
+                <div class="hidden md:flex space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+                    <a href="marketplace.html" class="text-gray-600 hover:text-blue-600">Marketplace</a>
+                    <a href="upload.html" class="text-gray-600 hover:text-blue-600">Upload</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div id="auth-buttons">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Product Container -->
+    <div class="container mx-auto px-4 py-8">
+        <div id="product-container">
+            <!-- Product will be loaded here -->
+            <div class="text-center py-12">
+                <div class="spinner"></div>
+                <p class="mt-4 text-gray-600">Loading product details...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="bg-gray-50 py-12">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl font-bold mb-6">You Might Also Like</h3>
+            <div id="related-products" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Related products will be loaded here -->
+                <div class="text-center py-8 col-span-full">
+                    <div class="spinner"></div>
+                    <p class="mt-4 text-gray-600">Loading related products...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-anchor text-blue-400 text-2xl"></i>
+                        <span class="text-2xl font-bold">WebHarbour</span>
+                    </div>
+                    <p class="text-gray-400">Your trusted digital marketplace.</p>
+                </div>
+                <!-- Footer links -->
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 WebHarbour. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal hidden">
+        <div class="modal-content max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Complete Purchase</h3>
+                    <button onclick="closePaymentModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <p class="font-semibold">Product: <span id="payment-product-title"></span></p>
+                        <p class="font-semibold mt-2">Amount to pay:</p>
+                        <p class="text-2xl font-bold text-green-600" id="payment-amount">$0.00</p>
+                    </div>
+
+                    <form id="payment-form">
+                        <div class="mb-4">
+                            <label class="form-label">Card Information</label>
+                            <div id="card-element" class="p-3 border rounded-lg"></div>
+                            <div id="card-errors" class="text-red-600 text-sm mt-2"></div>
+                        </div>
+
+                        <button type="submit" id="submit-payment" class="btn btn-success w-full py-3">
+                            <i class="fas fa-lock mr-2"></i> Complete Purchase
+                        </button>
+                    </form>
+                </div>
+
+                <div class="text-center text-sm text-gray-500">
+                    <p><i class="fas fa-shield-alt mr-1"></i> Secure payment processed by Stripe</p>
+                    <p>Your card details are never stored on our servers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="modal hidden">
+        <div class="modal-content max-w-4xl">
+            <div class="p-4">
+                <div class="flex justify-end mb-2">
+                    <button onclick="closeImageModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <img id="modal-image" src="" class="w-full rounded-lg">
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/marketplace.js"></script>
+
+    <style>
+        .product-tab {
+            padding: 12px 24px;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .product-tab:hover {
+            color: #3b82f6;
+        }
+
+        .product-tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screenshot-thumbnail {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .screenshot-thumbnail:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+    <script>
+        // Product page specific JavaScript
+        let currentProduct = null;
+        let stripe = null;
+        let cardElement = null;
+
+        // Initialize Stripe
+        function initStripe() {
+            stripe = Stripe('pk_test_your_publishable_key'); // Replace with your key
+
+            const elements = stripe.elements();
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#32325d',
+                        '::placeholder': {
+                            color: '#aab7c4'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load product data
+        async function loadProduct() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                window.location.href = 'marketplace.html';
+                return;
+            }
+
+            try {
+                const product = await ProductAPI.getProductById(productId);
+                currentProduct = product;
+                renderProduct(product);
+                loadRelatedProducts(product.category, productId);
+                initStripe();
+
+            } catch (error) {
+                document.getElementById('product-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-2">Product Not Found</h2>
+                        <p class="text-gray-600 mb-6">${error.message || 'The product you are looking for does not exist or has been removed.'}</p>
+                        <a href="marketplace.html" class="btn btn-primary">Browse Marketplace</a>
+                    </div>
+                `;
+            }
+        }
+
+        function renderProduct(product) {
+            const user = Auth.getUser();
+            const hasPurchased = user && user.purchasedProducts &&
+                user.purchasedProducts.includes(product._id);
+
+            const priceDisplay = product.discountPrice ? `
+                <div class="flex items-center space-x-4 mb-4">
+                    <span class="text-4xl font-bold text-green-600">$${product.discountPrice.toFixed(2)}</span>
+                    <span class="text-2xl text-gray-500 line-through">$${product.price.toFixed(2)}</span>
+                    <span class="bg-red-500 text-white px-3 py-1 rounded-full font-semibold">
+                        Save ${Math.round(100 - (product.discountPrice / product.price * 100))}%
+                    </span>
+                </div>
+            ` : `<div class="text-4xl font-bold text-green-600 mb-4">$${product.price.toFixed(2)}</div>`;
+
+            // Format compatibility info
+            const compatibilityInfo = [];
+            if (product.compatibility?.os) compatibilityInfo.push(`OS: ${product.compatibility.os}`);
+            if (product.compatibility?.browser) compatibilityInfo.push(`Browser: ${product.compatibility.browser}`);
+            if (product.compatibility?.minRam) compatibilityInfo.push(`RAM: ${product.compatibility.minRam}`);
+            if (product.compatibility?.processor) compatibilityInfo.push(`Processor: ${product.compatibility.processor}`);
+
+            const container = document.getElementById('product-container');
+            container.innerHTML = `
+                <!-- Breadcrumb -->
+                <div class="mb-6">
+                    <nav class="text-sm text-gray-600">
+                        <a href="../index.html" class="hover:text-blue-600">Home</a>
+                        <span class="mx-2">/</span>
+                        <a href="marketplace.html" class="hover:text-blue-600">Marketplace</a>
+                        <span class="mx-2">/</span>
+                        <span class="text-gray-800 font-medium">${product.title}</span>
+                    </nav>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column -->
+                    <div class="lg:col-span-2">
+                        <!-- Product Header -->
+                        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <img src="${product.developer.avatar}" 
+                                         alt="${product.developer.username}"
+                                         class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <p class="font-semibold">${product.developer.username}</p>
+                                        <p class="text-sm text-gray-600">
+                                            <i class="fas fa-calendar-alt mr-1"></i> 
+                                            ${new Date(product.createdAt).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center space-x-4">
+                                    <div class="text-right">
+                                        <div class="star-rating text-lg">
+                                            ${ProductAPI.renderStars(product.ratings?.average || 0)}
+                                        </div>
+                                        <p class="text-sm text-gray-600">
+                                            ${product.ratings?.count || 0} reviews
+                                        </p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold">${product.downloads || 0}</div>
+                                        <p class="text-sm text-gray-600">Downloads</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h1 class="text-3xl font-bold mb-4">${product.title}</h1>
+                            
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge badge-${product.category}">${product.category}</span>
+                                <span class="badge badge-${product.license}">${product.license}</span>
+                                ${product.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
+                                ${compatibilityInfo.map(info =>
+                `<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">${info}</span>`
+            ).join('')}
+                            </div>
+                            
+                            <!-- Thumbnail -->
+                            <div class="mb-6">
+                                <img src="${product.thumbnail}" 
+                                     alt="${product.title}"
+                                     class="w-full h-96 object-cover rounded-xl shadow-lg"
+                                     onclick="openImageModal('${product.thumbnail}')">
+                            </div>
+                        </div>
+                        
+                        <!-- Tabs -->
+                        <div class="bg-white rounded-xl shadow-lg mb-6">
+                            <div class="border-b">
+                                <div class="flex overflow-x-auto">
+                                    <div class="product-tab active" onclick="switchTab('description')">
+                                        Description
+                                    </div>
+                                    ${product.systemRequirements ? `
+                                    <div class="product-tab" onclick="switchTab('requirements')">
+                                        Requirements
+                                    </div>
+                                    ` : ''}
+                                    ${product.screenshots && product.screenshots.length > 0 ? `
+                                    <div class="product-tab" onclick="switchTab('screenshots')">
+                                        Screenshots (${product.screenshots.length})
+                                    </div>
+                                    ` : ''}
+                                    <div class="product-tab" onclick="switchTab('reviews')">
+                                        Reviews (${product.ratings?.count || 0})
+                                    </div>
+                                    <div class="product-tab" onclick="switchTab('updates')">
+                                        Updates
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tab Contents -->
+                            <div class="p-6">
+                                <!-- Description Tab -->
+                                <div id="tab-description" class="tab-content active">
+                                    <div class="prose max-w-none">
+                                        ${product.description.replace(/\n/g, '<br>')}
+                                    </div>
+                                    
+                                    ${product.tags && product.tags.length > 0 ? `
+                                    <div class="mt-8">
+                                        <h4 class="text-lg font-bold mb-3">Tags</h4>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${product.tags.map(tag => `
+                                                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                                    ${tag}
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                                
+                                <!-- Requirements Tab -->
+                                ${product.systemRequirements ? `
+                                <div id="tab-requirements" class="tab-content">
+                                    <div class="prose max-w-none">
+                                        ${product.systemRequirements.replace(/\n/g, '<br>')}
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                <!-- Screenshots Tab -->
+                                ${product.screenshots && product.screenshots.length > 0 ? `
+                                <div id="tab-screenshots" class="tab-content">
+                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                        ${product.screenshots.map((screenshot, index) => `
+                                            <div class="screenshot-thumbnail">
+                                                <img src="${screenshot}" 
+                                                     alt="Screenshot ${index + 1}"
+                                                     class="w-full h-48 object-cover rounded-lg"
+                                                     onclick="openImageModal('${screenshot}')">
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                <!-- Reviews Tab -->
+                                <div id="tab-reviews" class="tab-content">
+                                    <div class="mb-6">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <h4 class="text-xl font-bold">Customer Reviews</h4>
+                                                <div class="flex items-center mt-2">
+                                                    <div class="star-rating text-2xl mr-4">
+                                                        ${ProductAPI.renderStars(product.ratings?.average || 0)}
+                                                    </div>
+                                                    <span class="text-2xl font-bold">${product.ratings?.average?.toFixed(1) || '0.0'}</span>
+                                                    <span class="text-gray-600 ml-2">out of 5</span>
+                                                </div>
+                                            </div>
+                                            
+                                            ${user && hasPurchased ? `
+                                            <button onclick="showReviewForm()" class="btn btn-primary">
+                                                <i class="fas fa-edit mr-2"></i> Write a Review
+                                            </button>
+                                            ` : user ? `
+                                            <p class="text-gray-600">Purchase this product to leave a review</p>
+                                            ` : `
+                                            <a href="login.html" class="btn btn-outline">
+                                                Login to Review
+                                            </a>
+                                            `}
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="reviews-list">
+                                        ${product.reviews && product.reviews.length > 0 ?
+                    product.reviews.map(review => `
+                                                <div class="border-b pb-6 mb-6">
+                                                    <div class="flex items-center justify-between mb-3">
+                                                        <div class="flex items-center">
+                                                            <img src="${review.user.avatar}" 
+                                                                 alt="${review.user.username}"
+                                                                 class="w-10 h-10 rounded-full mr-3">
+                                                            <div>
+                                                                <p class="font-semibold">${review.user.username}</p>
+                                                                <div class="star-rating text-sm">
+                                                                    ${ProductAPI.renderStars(review.rating)}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <span class="text-sm text-gray-500">
+                                                            ${new Date(review.createdAt).toLocaleDateString()}
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    ${review.title ? `<h5 class="font-bold mb-2">${review.title}</h5>` : ''}
+                                                    <p class="text-gray-700 mb-3">${review.comment}</p>
+                                                    
+                                                    <div class="flex items-center space-x-4">
+                                                        <button class="text-sm text-gray-500 hover:text-blue-600">
+                                                            <i class="far fa-thumbs-up mr-1"></i> Helpful (${review.helpful || 0})
+                                                        </button>
+                                                        <button class="text-sm text-gray-500 hover:text-red-600">
+                                                            <i class="far fa-flag mr-1"></i> Report
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            `).join('') :
+                    `<p class="text-gray-600 text-center py-8">No reviews yet. Be the first to review this product!</p>`
+                }
+                                    </div>
+                                    
+                                    <!-- Review Form (Hidden by default) -->
+                                    ${user && hasPurchased ? `
+                                    <div id="review-form-container" class="hidden mt-8">
+                                        <div class="bg-gray-50 rounded-xl p-6">
+                                            <h4 class="text-lg font-bold mb-4">Write Your Review</h4>
+                                            <form onsubmit="submitReview(event)">
+                                                <div class="mb-4">
+                                                    <label class="form-label">Rating</label>
+                                                    <div class="flex space-x-1 mb-2" id="rating-stars">
+                                                        ${[1, 2, 3, 4, 5].map(i => `
+                                                            <i class="far fa-star text-2xl text-yellow-400 cursor-pointer"
+                                                               data-rating="${i}"
+                                                               onmouseover="hoverRating(${i})"
+                                                               onmouseout="resetRating()"
+                                                               onclick="setRating(${i})"></i>
+                                                        `).join('')}
+                                                    </div>
+                                                    <input type="hidden" id="review-rating" value="5">
+                                                </div>
+                                                
+                                                <div class="mb-4">
+                                                    <label class="form-label">Title (Optional)</label>
+                                                    <input type="text" id="review-title-input" 
+                                                           class="form-input" 
+                                                           placeholder="Summarize your experience">
+                                                </div>
+                                                
+                                                <div class="mb-4">
+                                                    <label class="form-label">Review *</label>
+                                                    <textarea id="review-comment-input" 
+                                                              class="form-input" 
+                                                              rows="4"
+                                                              placeholder="Share your experience with this product..."
+                                                              required></textarea>
+                                                </div>
+                                                
+                                                <div class="flex space-x-3">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Submit Review
+                                                    </button>
+                                                    <button type="button" onclick="hideReviewForm()" 
+                                                            class="btn btn-outline">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                                
+                                <!-- Updates Tab -->
+                                <div id="tab-updates" class="tab-content">
+                                    <div class="space-y-6">
+                                        <div class="border-l-4 border-blue-500 pl-4 py-2">
+                                            <h4 class="font-bold">Version ${product.version}</h4>
+                                            <p class="text-sm text-gray-600">Released ${new Date(product.createdAt).toLocaleDateString()}</p>
+                                            <p class="mt-2">Initial release</p>
+                                        </div>
+                                        
+                                        ${product.updatedAt && product.updatedAt !== product.createdAt ? `
+                                        <div class="border-l-4 border-gray-300 pl-4 py-2">
+                                            <h4 class="font-bold">Last Updated</h4>
+                                            <p class="text-sm text-gray-600">${new Date(product.updatedAt).toLocaleDateString()}</p>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        <div class="bg-blue-50 rounded-xl p-6">
+                                            <h4 class="font-bold mb-2">Update Policy</h4>
+                                            <p class="text-sm text-gray-700">
+                                                When you purchase this product, you'll receive free updates for 1 year. 
+                                                After that period, major updates may require an upgrade fee at the developer's discretion.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column (Purchase Panel) -->
+                    <div>
+                        <div class="sticky top-24">
+                            <!-- Purchase Box -->
+                            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                                ${priceDisplay}
+                                
+                                ${hasPurchased ? `
+                                <div class="text-center mb-6">
+                                    <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                                    <p class="text-lg font-semibold mb-2">You own this product</p>
+                                    <a href="${product.fileUrl}" 
+                                       class="btn btn-success w-full mb-3"
+                                       download>
+                                        <i class="fas fa-download mr-2"></i> Download Now
+                                    </a>
+                                    <p class="text-sm text-gray-600">
+                                        <i class="fas fa-hdd mr-1"></i> 
+                                        ${Utils.formatFileSize(product.fileSize)}
+                                    </p>
+                                </div>
+                                ` : `
+                                <div class="text-center mb-6">
+                                    <button onclick="initiatePurchase('${product._id}')" 
+                                            class="btn btn-success w-full text-lg py-4 mb-3">
+                                        <i class="fas fa-shopping-cart mr-2"></i> Purchase Now
+                                    </button>
+                                    
+                                    <div class="space-y-2 text-sm text-gray-600">
+                                        <p><i class="fas fa-shield-alt mr-2"></i> Secure payment</p>
+                                        <p><i class="fas fa-bolt mr-2"></i> Instant download</p>
+                                        <p><i class="fas fa-undo mr-2"></i> 30-day money-back guarantee</p>
+                                    </div>
+                                </div>
+                                `}
+                                
+                                <!-- Add to Wishlist -->
+                                <div class="mb-6">
+                                    <button class="btn btn-outline w-full">
+                                        <i class="far fa-heart mr-2"></i> Add to Wishlist
+                                    </button>
+                                </div>
+                                
+                                <!-- Product Details -->
+                                <div class="border-t pt-6">
+                                    <h3 class="font-bold mb-3">Product Details</h3>
+                                    <ul class="space-y-2">
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">Version:</span>
+                                            <span class="font-semibold">${product.version}</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">Last Updated:</span>
+                                            <span>${new Date(product.updatedAt).toLocaleDateString()}</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">Downloads:</span>
+                                            <span>${product.downloads || 0}</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">Category:</span>
+                                            <span class="font-semibold">${product.category}</span>
+                                        </li>
+                                        <li class="flex justify-between">
+                                            <span class="text-gray-600">License:</span>
+                                            <span>${product.license}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Developer Info -->
+                            <div class="bg-white rounded-xl shadow-lg p-6">
+                                <h3 class="font-bold mb-4">About the Developer</h3>
+                                <div class="flex items-center mb-4">
+                                    <img src="${product.developer.avatar}" 
+                                         alt="${product.developer.username}"
+                                         class="w-12 h-12 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-semibold">${product.developer.username}</p>
+                                        <p class="text-sm text-gray-600">
+                                            Member since ${new Date(product.developer.createdAt).getFullYear()}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex items-center justify-between text-sm mb-2">
+                                        <span class="text-gray-600">Rating</span>
+                                        <span class="font-semibold">4.8/5.0</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 96%"></div>
+                                    </div>
+                                </div>
+                                
+                                <a href="marketplace.html?developer=${product.developer._id}"
+                                   class="block text-center btn btn-outline w-full">
+                                    View All Products
+                                </a>
+                                
+                                <div class="mt-4 pt-4 border-t">
+                                    <h4 class="font-bold mb-2">Support</h4>
+                                    <p class="text-sm text-gray-600 mb-3">
+                                        Have questions about this product? Contact the developer.
+                                    </p>
+                                    <button class="btn btn-outline w-full text-sm">
+                                        <i class="fas fa-envelope mr-2"></i> Contact Developer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadRelatedProducts(category, excludeId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products?category=${category}&limit=4&status=approved`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const relatedProducts = data.products.filter(p => p._id !== excludeId).slice(0, 4);
+                    const container = document.getElementById('related-products');
+
+                    if (relatedProducts.length === 0) {
+                        container.innerHTML = `
+                            <div class="col-span-full text-center py-8">
+                                <p class="text-gray-600">No related products found</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = relatedProducts.map(product => ProductAPI.renderProductCard(product)).join('');
+                }
+            } catch (error) {
+                console.error('Error loading related products:', error);
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.product-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        function openImageModal(imageUrl) {
+            document.getElementById('modal-image').src = imageUrl;
+            document.getElementById('image-modal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('image-modal').classList.add('hidden');
+        }
+
+        async function initiatePurchase(productId) {
+            const user = Auth.getUser();
+            if (!user) {
+                Utils.showAlert('Please login to make a purchase', 'warning');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const paymentData = await PaymentAPI.createPaymentIntent(productId);
+
+                // Update payment modal
+                document.getElementById('payment-product-title').textContent = currentProduct.title;
+                document.getElementById('payment-amount').textContent = `$${paymentData.amount.toFixed(2)}`;
+
+                // Show payment modal
+                document.getElementById('payment-modal').classList.remove('hidden');
+
+                // Mount card element
+                if (cardElement) {
+                    cardElement.unmount();
+                }
+                cardElement = stripe.elements().create('card');
+                cardElement.mount('#card-element');
+
+            } catch (error) {
+                console.error('Purchase error:', error);
+            }
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+            if (cardElement) {
+                cardElement.unmount();
+            }
+        }
+
+        // Setup payment form submission
+        document.addEventListener('DOMContentLoaded', function () {
+            const paymentForm = document.getElementById('payment-form');
+            if (paymentForm) {
+                paymentForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+
+                    const submitBtn = document.getElementById('submit-payment');
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<div class="spinner spinner-sm mr-2"></div> Processing...';
+
+                    const { error, paymentIntent } = await stripe.confirmCardPayment(
+                        '{{CLIENT_SECRET}}', // This should come from your backend
+                        {
+                            payment_method: {
+                                card: cardElement
+                            }
+                        }
+                    );
+
+                    if (error) {
+                        document.getElementById('card-errors').textContent = error.message;
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-lock mr-2"></i> Complete Purchase';
+                    } else if (paymentIntent.status === 'succeeded') {
+                        Utils.showAlert('Payment successful! Download will start automatically.', 'success');
+                        closePaymentModal();
+
+                        // Refresh page to show download button
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                });
+            }
+
+            // Load product when page loads
+            loadProduct();
+        });
+
+        // Review functionality
+        let selectedRating = 5;
+
+        function hoverRating(rating) {
+            const stars = document.querySelectorAll('#rating-stars .fa-star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        function resetRating() {
+            const stars = document.querySelectorAll('#rating-stars .fa-star');
+            stars.forEach((star, index) => {
+                if (index < selectedRating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        function setRating(rating) {
+            selectedRating = rating;
+            document.getElementById('review-rating').value = rating;
+            resetRating();
+        }
+
+        function showReviewForm() {
+            document.getElementById('review-form-container').classList.remove('hidden');
+        }
+
+        function hideReviewForm() {
+            document.getElementById('review-form-container').classList.add('hidden');
+        }
+
+        async function submitReview(event) {
+            event.preventDefault();
+
+            const rating = selectedRating;
+            const title = document.getElementById('review-title-input').value.trim();
+            const comment = document.getElementById('review-comment-input').value.trim();
+
+            if (!comment) {
+                Utils.showAlert('Please enter a review comment', 'error');
+                return;
+            }
+
+            try {
+                await ProductAPI.addReview(currentProduct._id, {
+                    rating,
+                    title,
+                    comment
+                });
+
+                // Reset form
+                event.target.reset();
+                selectedRating = 5;
+                resetRating();
+                hideReviewForm();
+
+                // Reload product to show new review
+                loadProduct();
+
+            } catch (error) {
+                // Error already shown
+            }
+        }
+
+        // Expose functions to window
+        window.switchTab = switchTab;
+        window.openImageModal = openImageModal;
+        window.closeImageModal = closeImageModal;
+        window.initiatePurchase = initiatePurchase;
+        window.closePaymentModal = closePaymentModal;
+        window.hoverRating = hoverRating;
+        window.resetRating = resetRating;
+        window.setRating = setRating;
+        window.showReviewForm = showReviewForm;
+        window.hideReviewForm = hideReviewForm;
+        window.submitReview = submitReview;
+    </script>
+</body>
+
+</html>

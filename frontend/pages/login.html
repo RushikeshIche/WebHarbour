@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WebHarbour</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-anchor text-blue-600 text-2xl"></i>
+                    <a href="../index.html" class="text-2xl font-bold text-gray-800">WebHarbour</a>
+                </div>
+                <a href="../index.html" class="text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Container -->
+    <div class="flex-1 flex items-center justify-center py-12">
+        <div id="auth-container" class="w-full max-w-md">
+            <!-- Auth content will be loaded by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 WebHarbour. All rights reserved.</p>
+            <p class="text-gray-400 text-sm mt-2">
+                <a href="#" class="hover:text-white mr-4">Privacy Policy</a>
+                <a href="#" class="hover:text-white mr-4">Terms of Service</a>
+                <a href="#" class="hover:text-white">Contact Support</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+
+    <script>
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function () {
+            const user = Auth.getUser();
+            if (user) {
+                window.location.href = '../index.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

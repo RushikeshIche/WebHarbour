@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - WebHarbour</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation (Same as index.html) -->
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-anchor text-blue-600 text-2xl"></i>
+                    <a href="../index.html" class="text-2xl font-bold text-gray-800">WebHarbour</a>
+                </div>
+
+                <div class="hidden md:flex space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+                    <a href="marketplace.html" class="text-gray-600 hover:text-blue-600">Marketplace</a>
+                    <a href="upload.html" class="text-gray-600 hover:text-blue-600">Upload</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div id="auth-buttons">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Check if user is logged in -->
+        <div id="login-required" class="hidden">
+            <div class="max-w-md mx-auto text-center py-12">
+                <i class="fas fa-user-lock text-5xl text-blue-600 mb-6"></i>
+                <h2 class="text-2xl font-bold mb-4">Login Required</h2>
+                <p class="text-gray-600 mb-8">Please login to access your dashboard.</p>
+                <a href="login.html" class="btn btn-primary px-8 py-3">Login Now</a>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" class="hidden">
+            <!-- Welcome Section -->
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl p-6 mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2">Welcome, <span id="user-name">User</span>!</h1>
+                        <p class="text-blue-100">Manage your account, purchases, and uploads.</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-blue-200">Account Balance</p>
+                        <p class="text-3xl font-bold">$<span id="user-balance">0.00</span></p>
+                        <button onclick="showAddFundsModal()"
+                            class="mt-2 text-sm bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">
+                            <i class="fas fa-plus mr-1"></i> Add Funds
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-shopping-bag text-blue-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Total Purchases</p>
+                            <p class="text-2xl font-bold" id="purchases-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-upload text-green-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">My Uploads</p>
+                            <p class="text-2xl font-bold" id="uploads-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-star text-purple-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Total Revenue</p>
+                            <p class="text-2xl font-bold">$<span id="total-revenue">0.00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Navigation -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <a href="#purchases" onclick="showSection('purchases')" class="dashboard-nav-btn active">
+                    <i class="fas fa-shopping-bag text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">My Purchases</h3>
+                    <p class="text-gray-600">View all your purchased products</p>
+                </a>
+
+                <a href="#uploads" onclick="showSection('uploads')" class="dashboard-nav-btn">
+                    <i class="fas fa-upload text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">My Uploads</h3>
+                    <p class="text-gray-600">Manage your uploaded products</p>
+                </a>
+
+                <a href="#profile" onclick="showSection('profile')" class="dashboard-nav-btn">
+                    <i class="fas fa-user-cog text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Profile Settings</h3>
+                    <p class="text-gray-600">Update your account information</p>
+                </a>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="bg-white rounded-xl shadow-lg">
+                <!-- Purchases Section -->
+                <div id="purchases-section" class="dashboard-section active p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">My Purchases</h2>
+                        <div class="relative">
+                            <input type="text" id="search-purchases" class="form-input pr-10"
+                                placeholder="Search purchases...">
+                            <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <div id="purchases-container">
+                        <div class="text-center py-12">
+                            <div class="spinner"></div>
+                            <p class="mt-4 text-gray-600">Loading your purchases...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Uploads Section -->
+                <div id="uploads-section" class="dashboard-section hidden p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">My Uploads</h2>
+                        <a href="upload.html" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i> Upload New
+                        </a>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex space-x-4 border-b">
+                            <button onclick="filterUploads('all')"
+                                class="px-4 py-2 font-medium border-b-2 border-blue-600 text-blue-600">
+                                All
+                            </button>
+                            <button onclick="filterUploads('pending')"
+                                class="px-4 py-2 font-medium text-gray-600 hover:text-blue-600">
+                                Pending
+                            </button>
+                            <button onclick="filterUploads('approved')"
+                                class="px-4 py-2 font-medium text-gray-600 hover:text-blue-600">
+                                Approved
+                            </button>
+                            <button onclick="filterUploads('rejected')"
+                                class="px-4 py-2 font-medium text-gray-600 hover:text-blue-600">
+                                Rejected
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="uploads-container">
+                        <div class="text-center py-12">
+                            <div class="spinner"></div>
+                            <p class="mt-4 text-gray-600">Loading your uploads...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profile-section" class="dashboard-section hidden p-6">
+                    <h2 class="text-2xl font-bold mb-6">Profile Settings</h2>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Personal Info -->
+                        <div class="lg:col-span-2">
+                            <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                                <h3 class="text-xl font-bold mb-4">Personal Information</h3>
+                                <form id="profile-form" onsubmit="updateProfile(event)">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label class="form-label">Username</label>
+                                            <input type="text" id="profile-username" class="form-input" required>
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Email</label>
+                                            <input type="email" id="profile-email" class="form-input" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label class="form-label">Bio</label>
+                                        <textarea id="profile-bio" class="form-input" rows="3"
+                                            placeholder="Tell us about yourself..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        Save Changes
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Change Password -->
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <h3 class="text-xl font-bold mb-4">Change Password</h3>
+                                <form id="password-form" onsubmit="changePassword(event)">
+                                    <div class="mb-4">
+                                        <label class="form-label">Current Password</label>
+                                        <input type="password" id="current-password" class="form-input" required>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                        <div>
+                                            <label class="form-label">New Password</label>
+                                            <input type="password" id="new-password" class="form-input" required
+                                                minlength="6">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Confirm New Password</label>
+                                            <input type="password" id="confirm-new-password" class="form-input" required
+                                                minlength="6">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        Change Password
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Avatar & Account -->
+                        <div>
+                            <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                                <h3 class="text-xl font-bold mb-4">Profile Picture</h3>
+                                <div class="text-center">
+                                    <img id="profile-avatar"
+                                        src="https://res.cloudinary.com/demo/image/upload/v1570979134/avatar_default.jpg"
+                                        class="w-32 h-32 rounded-full mx-auto mb-4">
+                                    <input type="file" id="avatar-upload" class="hidden" accept="image/*"
+                                        onchange="uploadAvatar(event)">
+                                    <label for="avatar-upload" class="btn btn-outline cursor-pointer">
+                                        <i class="fas fa-upload mr-2"></i> Upload Photo
+                                    </label>
+                                    <p class="text-sm text-gray-500 mt-2">JPG, PNG up to 5MB</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <h3 class="text-xl font-bold mb-4">Account Type</h3>
+                                <div class="mb-4">
+                                    <p class="font-medium mb-1">Current Role</p>
+                                    <p id="user-role" class="text-lg font-bold text-blue-600">User</p>
+                                </div>
+
+                                <div class="mb-6">
+                                    <p class="text-sm text-gray-600 mb-3">
+                                        Upgrade to Developer account to upload products and earn revenue.
+                                    </p>
+                                    <button onclick="requestDeveloperAccount()" class="btn btn-success w-full"
+                                        id="developer-btn">
+                                        <i class="fas fa-rocket mr-2"></i> Become a Developer
+                                    </button>
+                                </div>
+
+                                <div class="border-t pt-4">
+                                    <h4 class="font-bold mb-2">Account Actions</h4>
+                                    <div class="space-y-2">
+                                        <button onclick="exportData()" class="btn btn-outline w-full text-left">
+                                            <i class="fas fa-download mr-2"></i> Export My Data
+                                        </button>
+                                        <button onclick="showDeleteModal()" class="btn btn-danger w-full text-left">
+                                            <i class="fas fa-trash mr-2"></i> Delete Account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Funds Modal -->
+    <div id="add-funds-modal" class="modal hidden">
+        <div class="modal-content max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Add Funds to Wallet</h3>
+                    <button onclick="closeModal('add-funds-modal')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <label class="form-label">Amount (USD)</label>
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <button onclick="setAmount(10)" class="py-3 border rounded-lg hover:bg-gray-50">
+                            $10
+                        </button>
+                        <button onclick="setAmount(25)" class="py-3 border rounded-lg hover:bg-gray-50">
+                            $25
+                        </button>
+                        <button onclick="setAmount(50)" class="py-3 border rounded-lg hover:bg-gray-50">
+                            $50
+                        </button>
+                        <button onclick="setAmount(100)" class="py-3 border rounded-lg hover:bg-gray-50">
+                            $100
+                        </button>
+                        <button onclick="setAmount(250)" class="py-3 border rounded-lg hover:bg-gray-50">
+                            $250
+                        </button>
+                        <button onclick="setAmount(500)" class="py-3 border rounded-lg hover:bg-gray-50">
+                            $500
+                        </button>
+                    </div>
+                    <input type="number" id="funds-amount" class="form-input" placeholder="Enter custom amount" min="1"
+                        step="1">
+                </div>
+
+                <button onclick="processFunds()" class="btn btn-success w-full py-3">
+                    <i class="fas fa-credit-card mr-2"></i> Add Funds
+                </button>
+
+                <p class="text-center text-sm text-gray-500 mt-4">
+                    Secure payment processed by Stripe
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (Same as index.html) -->
+    <footer class="bg-gray-800 text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-anchor text-blue-400 text-2xl"></i>
+                        <span class="text-2xl font-bold">WebHarbour</span>
+                    </div>
+                    <p class="text-gray-400">Your trusted digital marketplace.</p>
+                </div>
+                <!-- Footer links -->
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 WebHarbour. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+
+</html>
